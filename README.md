@@ -9,8 +9,8 @@ and writing the data as json to stdout.
 ## Usage
 ```bash
 # Convert users.data to json
-glot-run-data-decoder users <users.dat>
+glot-run-data-decoder users <users.data>
 
 # Convert languages.data to json
-glot-run-data-decoder languages <languages.dat>
+glot-run-data-decoder languages <languages.data>
 ```

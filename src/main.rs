@@ -27,7 +27,7 @@ fn main() {
         }
 
         _ => {
-            println!("Usage:\n{} users <users.dat>\n{} languages <languages.dat>", args[0], args[0]);
+            println!("Usage:\n{} users <users.data>\n{} languages <languages.data>", args[0], args[0]);
         }
     }
 }
