@@ -28,12 +28,6 @@ jobs:
           echo "ARCHIVE_NAME=$ARCHIVE_NAME" >> $GITHUB_ENV
           echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
 
-      - name: Debug
-        run: |
-          echo $APP_NAME
-          echo $ARCHIVE_NAME
-          echo $UPLOAD_URL
-
       - name: Build application
         run: |
           cargo build --release
@@ -44,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: $UPLOAD_URL
-          asset_path: $ARCHIVE_NAME
-          asset_name: $ARCHIVE_NAME
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ${{ env.ARCHIVE_NAME }}
+          asset_name: ${{ env.ARCHIVE_NAME }}
           asset_content_type: application/zip
