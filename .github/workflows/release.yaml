@@ -19,19 +19,25 @@ jobs:
           default: true
           override: true
 
-      - name: Build application
+      - name: Prepare variables
         run: |
-          cargo build --release
-          zip --junk-paths glot-run-data-decoder target/release/glot-run-data-decoder
+          APP_NAME="glot-run-data-decoder"
+          ARCHIVE_NAME="${APP_NAME}.zip"
+          UPLOAD_URL="$(jq -r '.release.upload_url' $GITHUB_EVENT_PATH | sed -e "s/{?name,label}$/?name=${ARCHIVE_NAME}/")"
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=$ARCHIVE_NAME" >> $GITHUB_ENV
+          echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
 
       - name: Debug
         run: |
-            cat $GITHUB_EVENT_PATH
+          echo $APP_NAME
+          echo $ARCHIVE_NAME
+          echo $UPLOAD_URL
 
-      - name: Expose upload_url
+      - name: Build application
         run: |
-          UPLOAD_URL=$(cat $GITHUB_EVENT_PATH | jq -r '.release.upload_url')
-          echo "::set-env name=UPLOAD_URL::$UPLOAD_URL"
+          cargo build --release
+          zip --junk-paths $ARCHIVE_NAME target/release/$APP_NAME
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
@@ -39,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: $UPLOAD_URL
-          asset_path: glot-run-data-decoder.zip
-          asset_name: glot-run-data-decoder.zip
+          asset_path: $ARCHIVE_NAME
+          asset_name: $ARCHIVE_NAME
           asset_content_type: application/zip
